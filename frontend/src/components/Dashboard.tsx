@@ -19,25 +19,25 @@ const Dashboard: React.FC<DashboardProps> = ({ menuTitle }) => {
           <>
             <div className="row" style={{ height: 'auto' }}>
               <Card 
-                title="Your Last Report"
-                content="Done on May 06"
+                title="First Card"
+                content="First Card Content"
                 height="150px"
               />
               <Card
-                title="Your Subscription"
-                content="Standard Protection, Renewal on May 06, 2025"
+                title="Second Card"
+                content="Second Card Content"
                 height="150px"
               />
               <Card
-                title="Tip for You"
-                content="Take back control of your social media. Review the privacy settings on all of your social media accounts."
+                title="Third Card"
+                content="Third Card Content"
                 height="150px"
               />
             </div>
             <div className="row" style={{ height: 'auto' }}>
-                <Card title="58" content="Total Data Brokers" />
-                <Card title="1,416" content="Listings Reviewed" />
-                <Card title="44" content="Data Brokers with Your Info" />
+                <Card title="Title 1" content="Content 1" />
+                <Card title="Title 2" content="Content 2" />
+                <Card title="Title 3" content="Content 3" />
             </div>
             {/* 
             <div className="row">
