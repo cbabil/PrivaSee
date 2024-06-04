@@ -1,7 +1,7 @@
 # PrivaSee
 [![CodeQL](https://github.com/cbabil/PyPluginizer/actions/workflows/codeql.yml/badge.svg)](https://github.com/cbabil/PyPluginizer/actions/workflows/codeql.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-[![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)]
+[React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
 <br><span style="font-size:larger;">an intuitive dashboard and network monitoring tool designed for home networks.</span>
 
 ## Introduction
