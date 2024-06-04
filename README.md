@@ -1,4 +1,4 @@
-# PrivaSee
+![Model](https://github.com/cbabil/PrivaSee/blob/master/frontend/src/assets/images/logo.png)
 [![CodeQL](https://github.com/cbabil/PyPluginizer/actions/workflows/codeql.yml/badge.svg)](https://github.com/cbabil/PyPluginizer/actions/workflows/codeql.yml)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 <br><span style="font-size:larger;">an intuitive dashboard and network monitoring tool designed for home networks.</span>
