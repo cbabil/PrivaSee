@@ -1,0 +1,20 @@
+# Use Alpine Linux as the base image
+FROM node:20-alpine
+
+# Set the working directory inside the container
+WORKDIR /opt/privasee
+
+# Copy the package.json and package-lock.json to the container
+COPY ./frontend/package*.json .
+
+# Copy the frontend code from the project root directory
+COPY ./frontend/ .
+
+# Install Node.js dependencies using Yarn
+RUN yarn install
+
+# Build the production-ready frontend application
+#RUN yarn build
+
+# Define the command to start your React application
+CMD ["yarn", "run", "dev", "--debug"]

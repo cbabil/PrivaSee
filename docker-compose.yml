@@ -1,0 +1,32 @@
+version: '3.7'
+
+networks:
+  privasee-net:
+
+services:
+  frontend:
+    container_name: privasee_frontend
+    build:
+      context: ./
+      dockerfile: docker/frontend-Dockerfile
+    ports:
+      - "15000:15000"
+    #environment:
+      #API_URL: "http://10.0.5.19:8000/api"
+    #depends_on:
+    #  - backend
+    networks:
+      privasee-net:
+
+  backend:
+    container_name: privasee_backend
+    build:
+      context: ./
+      dockerfile: docker/backend-Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: "/opt/speedtest/database/pispeedtest.db"
+      MIDDLEWEAR_PORT: "8000"
+    networks:
+      privasee-net:

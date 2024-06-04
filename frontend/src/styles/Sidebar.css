@@ -1,0 +1,43 @@
+.sidebar {
+  flex: 0 0 230px;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  max-width: 230px;
+  width: 230px;
+  background-color: #141a25;
+  z-index: 10;
+  transition: .33s;
+  justify-content: space-between;
+}
+
+.sidebar-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-bottom: 30px;
+}
+
+.logo {
+  height: 88px;
+  justify-content: center;
+  text-align: left;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+}
+
+.software-info {
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: auto; /* Push to the bottom */
+  margin: 20px; /* Add spacing around the box */
+}
+
+.software-info:hover {
+  color: #f1c40f; /* Change text color on hover */
+}

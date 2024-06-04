@@ -1,0 +1,31 @@
+.main-layout {
+  display: flex;
+  flex-direction: column; /* Change to column to stack header and content vertically */
+  height: 100vh;
+}
+
+.site-body {
+  position: fixed;
+  height: 100vh;
+  left: 230px;
+  right: 0;
+  top: 90px;
+  margin: auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+.row {
+  display: flex; /* Ensure flex layout */
+  flex-direction: row;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.row .card {
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-bottom:20px;
+}

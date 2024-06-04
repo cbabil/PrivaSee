@@ -1,0 +1,43 @@
+.navigation {
+  color: hsla(0, 0%, 100%, .6);
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.navigation ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+.navigation ul li a {
+    color: hsla(0, 0%, 100%, .8);
+    padding: 2px 26px;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: .33s;
+    position: relative;
+    font-size: 20px;
+    line-height: 1.1;
+    font-weight: 400;
+    margin-top: 40px;
+    cursor: pointer;
+  }
+
+  .navigation ul li a svg {
+    margin-right: 10px;
+    color: #ffffff; /* Ensures icons are white */
+  }
+  
+  .navigation ul li a:hover svg,
+  .navigation ul li a:hover {
+    color: #f1c40f; /* Change icon color on hover */
+  }
+  
+
+  /* Active link styles */
+.navigation ul li a.active,
+.navigation ul li a.active svg {
+  color: #f1c40f; /* Change icon color for active link */
+}

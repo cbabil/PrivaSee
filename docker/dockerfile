@@ -1,0 +1,69 @@
+######################################################################
+#
+# System dependencies
+FROM python:3.9-alpine as sys-deps
+
+USER root
+
+# Add speedtest to source list
+RUN apk update
+#RUN apk update && \
+#    apk add --no-cache ca-certificates gnupg1 && \
+#    wget -O /etc/apk/keys/speedtest-cli.rsa.pub https://ookla.bintray.com/download/ookla-apk-signing-key.pub && \
+#    wget https://ookla.bintray.com/download/ookla-speedtest-1.0.0-arm64.tgz && \
+#    tar -xvf ookla-speedtest-1.0.0-arm64.tgz && \
+#    mv speedtest /usr/local/bin && \
+#    rm -rf ookla-speedtest-1.0.0-arm64.tgz
+
+# Install dependencies
+RUN apk add --no-cache --update \
+        git \
+        tzdata \
+        logrotate
+
+# Clean up
+RUN rm -rf /var/cache/apk/* && \
+    rm -rf /tmp/* && \
+    rm -rf /var/log/* && \
+    rm -rf /var/tmp/*
+
+######################################################################
+#
+# Development Environment
+FROM sys-deps as development
+
+# Clone the code from GitHub
+#RUN git clone https://github.com/cbabil/privasee.git /workspace/privasee
+
+# Set the working directory
+WORKDIR /workspace/privasee
+
+# Install Python packages
+#RUN pip install --no-cache-dir -r requirements.txt
+
+# Install additional development tools
+RUN apk add --no-cache vim
+
+ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+
+######################################################################
+#
+# Production Environment
+FROM sys-deps as production
+
+# Clone the code from GitHub
+#RUN git clone https://github.com/cbabil/speedtest.git /opt/speedtest
+
+# Set the working directory
+#WORKDIR /opt/speedtest
+
+# Install Python packages
+#RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy logrotate configuration file
+#COPY speedtest-logrotate /etc/logrotate.d/
+
+# Add the cron job
+#RUN crontab -l | { cat; echo "15 * * * * bash cd /opt/speedtest && /usr/local/bin/python -m speedtest --out data/latest.json > /var/log/speedtest/speedtest.log"; } | crontab -
+
+#CMD [ "/usr/sbin/crond", "-f" ]

@@ -1,0 +1,52 @@
+{
+    "name": "privasee",
+    "private": true,
+    "version": "0.0.1",
+    "type": "module",
+    "scripts": {
+      "dev": "vite",
+      "build": "tsc && vite build",
+      "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+      "preview": "vite preview"
+    },
+    "dependencies": {
+      "@babel/runtime": "^7.23.9",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-router-dom": "^6.20.0",
+      "sass": "^1.70.0",
+      "recharts": "^2.11.0",
+      "axios": "^1.6.7",
+      "@mui/x-data-grid": "^6.19.3",
+      "@material-ui/core": "^4.12.4",
+      "@melloware/react-logviewer": "^5.0.3",
+      "react-toastify": "^10.0.4",
+      "chart.js": "^4.4.3",
+      "react-chartjs-2": "^5.2.0",
+      "reactflow": "^11.11.3",
+      "react-spinners": "^0.13.8"
+    },
+    "devDependencies": {
+      "@mui/material": "^5.15.7",
+      "@mui/icons-material": "^5.15.7",
+      "@emotion/styled": "^11.11.0",
+      "@emotion/react": "^11.11.3",
+      "@types/react": "^18.2.52",
+      "@types/react-dom": "^18.2.18",
+      "@typescript-eslint/eslint-plugin": "^5.61.0",
+      "@typescript-eslint/parser": "^5.61.0",
+      "@vitejs/plugin-react": "^4.2.1",
+      "eslint": "^8.56.0",
+      "eslint-plugin-react-hooks": "^4.6.0",
+      "eslint-plugin-react-refresh": "^0.4.5",
+      "typescript": "^5.3.3",
+      "vite": "^4.4.0"
+    },
+    "prettier": {
+      "printWidth": 90,
+      "bracketSpacing": true,
+      "trailingComma": "es5",
+      "semi": false,
+      "singleQuote": true
+    }
+  }
