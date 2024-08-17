@@ -1,5 +1,5 @@
 import React from 'react';
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import Notification from './Notification';
 import '../styles/Header.css';
 
 interface HeaderProps {
@@ -7,18 +7,13 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ menuTitle }) => {
-  const notificationCount = 5; // Replace with your dynamic notification count
-
   return (
     <header className="header">
       <div className="header-left">
         {menuTitle}
       </div>
       <div className="header-right">
-        <NotificationsIcon className="notification" />
-        {notificationCount > 0 && (
-            <span className="notification-badge">{notificationCount}</span>
-          )}
+        <Notification />
       </div>
     </header>
   );

@@ -26,7 +26,19 @@
   font-weight: bold;
   font-size: 18px; /* Make the header text bigger */
   color: #fff;
-  text-align: left; /* left-align the table header text */
+  text-align: left; /* Left-align the table header text */
+  cursor: pointer; /* Add pointer cursor to indicate sortable columns */
+  position: relative; /* Position relative for sorting arrow */
+}
+
+.device-summary th:hover {
+  background-color: transparent !important; /* Ensure background does not change on hover */
+  color: #fff !important; /* Ensure the text color does not change on hover */
+}
+
+.device-summary th .sort-arrow {
+  margin-left: 5px;
+  font-size: 14px;
 }
 
 .device-summary tr {
@@ -37,7 +49,7 @@
   background-color: transparent;
 }
 
-.device-summary tr:hover {
+.device-summary tr:hover td {
   background-color: #40495b;
 }
 
@@ -171,7 +183,6 @@
 .clickable {
   cursor: pointer;
 }
-
 
 .tabs {
   display: flex;

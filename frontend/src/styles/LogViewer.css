@@ -1,0 +1,83 @@
+/* LogViewer.css */
+
+.log-summary {
+  margin-top: 20px;
+}
+
+.log-summary h2 {
+  margin-bottom: 20px;
+}
+
+.log-summary table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border: none;
+}
+
+.log-summary th,
+.log-summary td {
+  border: none;
+  padding: 8px;
+  text-align: left;
+}
+
+.log-summary th {
+  background-color: transparent;
+  font-weight: bold;
+  font-size: 18px;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  position: relative;
+}
+
+.log-summary th:hover {
+  background-color: transparent !important;
+  color: #fff !important;
+}
+
+.log-summary th .sort-arrow {
+  margin-left: 5px;
+  font-size: 14px;
+}
+
+.log-summary tr {
+  border-bottom: 1px solid #2f3643;
+}
+
+.log-summary tr:hover td {
+  background-color: #40495b;
+}
+
+.log-summary td {
+  white-space: nowrap;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  min-height: 300px;
+}
+
+.loading-container p {
+  margin-top: 10px;
+  font-size: 20px;
+  color: #123abc;
+}
+
+
+.log-default {
+  background-color: transparent;
+}
+
+/* Sliding card styles */
+.log-summary-container {
+  display: flex;
+  position: relative;
+  width: 100%;
+}

@@ -4,6 +4,7 @@ import Card from './Card';
 import Header from './Header';
 import DeviceSummary from './DeviceSummary';
 import Topology from './Topology';
+import LogViewer from './LogViewer';
 import NotFound from './NotFound';
 import '../styles/Dashboard.css';
 
@@ -46,22 +47,22 @@ const Dashboard: React.FC<DashboardProps> = ({ menuTitle }) => {
             */}
           </>
         );
-      case 'Devices':
-        return (
-          <div className="row" style={{ height: '90%' }}>
-            <DeviceSummary />
-          </div>
-        );
       case 'Topology':
         return (
           <div className="row" style={{ height: '90%' }}>
             <Topology />
           </div>
         );
-      case 'Events':
+      case 'Devices':
         return (
-          <div className="row" style={{ height: 'auto' }}>
-            <h2>Events Content</h2>
+          <div className="row" style={{ height: '90%' }}>
+            <DeviceSummary />
+          </div>
+        );
+      case 'System Log':
+        return (
+          <div className="row" style={{ height: '90%' }}>
+            <LogViewer />
           </div>
         );
       case 'Settings':
@@ -73,7 +74,7 @@ const Dashboard: React.FC<DashboardProps> = ({ menuTitle }) => {
       default:
         return (
           <div className="row" style={{ height: 'auto' }}>
-            <h2>Events Content</h2>
+            <h2>Content</h2>
           </div>
         );
     }
