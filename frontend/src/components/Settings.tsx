@@ -1,51 +1,82 @@
-// SettingsPage.tsx
-
 import React, { useState, useEffect } from 'react';
-import PluginList from './PluginList';
-import GeneralSettingsForm from './GeneralSettingsForm';
-import SaveButton from './SaveButton';
-import '../styles/SettingsPage.css';
+import '../styles/Settings.css';
 
 const SettingsPage: React.FC = () => {
-  const [plugins, setPlugins] = useState([]);
+  const [activeTab, setActiveTab] = useState('general');
   const [generalSettings, setGeneralSettings] = useState({});
+  const [plugins, setPlugins] = useState([]);
+  const [systemSettings, setSystemSettings] = useState({});
 
   useEffect(() => {
-    // Fetch plugin data from backend
-    // Set plugins state with fetched data
-    // Fetch general settings from backend
-    // Set general settings state with fetched data
+    // Fetch settings data from backend
+    // Set state for generalSettings, plugins, and systemSettings
   }, []);
-
-  const handlePluginConfigChange = (pluginId: string, config: any) => {
-    // Update plugin configuration in the backend
-  };
 
   const handleGeneralSettingsChange = (settings: any) => {
     // Update general settings in the backend
+    setGeneralSettings(settings);
+  };
+
+  const handlePluginConfigChange = (pluginId: string, config: any) => {
+    // Update plugin configuration in the backend
+    setPlugins(prevPlugins => prevPlugins.map(plugin => 
+      plugin.id === pluginId ? { ...plugin, config } : plugin
+    ));
+  };
+
+  const handleSystemSettingsChange = (settings: any) => {
+    // Update system settings in the backend
+    setSystemSettings(settings);
   };
 
   const handleSave = () => {
-    // Save changes to plugin configurations and general settings
+    // Save changes to all settings
+  };
+
+  const cancelSave = () => {
+    // Cancel changes to all settings
+  };
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'general':
+        return (
+          <div className="general-section">
+            <h2>General Settings</h2>
+            {/* Add general settings form components here */}
+          </div>
+        );
+      case 'plugins':
+        return (
+          <div className="plugins-section">
+            <h2>Plugins Settings</h2>
+            {/* Add plugin list and configuration components here */}
+          </div>
+        );
+      case 'system':
+        return (
+          <div className="system-section">
+            <h2>System Settings</h2>
+            {/* Add system settings form components here */}
+          </div>
+        );
+      default:
+        return null;
+    }
   };
 
   return (
     <div className="settings-page">
-      <h1>Settings</h1>
       <div className="tabs">
-        {/* Tabs or Navigation Menu */}
+        <button onClick={() => setActiveTab('general')} className={activeTab === 'general' ? 'active' : ''}>General</button>
+        <button onClick={() => setActiveTab('plugins')} className={activeTab === 'plugins' ? 'active' : ''}>Plugins</button>
+        <button onClick={() => setActiveTab('system')} className={activeTab === 'system' ? 'active' : ''}>System</button>
       </div>
       <div className="content">
-        <div className="plugin-section">
-          <h2>Plugins</h2>
-          <PluginList plugins={plugins} onConfigChange={handlePluginConfigChange} />
-        </div>
-        <div className="general-settings-section">
-          <h2>General Settings</h2>
-          <GeneralSettingsForm settings={generalSettings} onChange={handleGeneralSettingsChange} />
-        </div>
+        {renderContent()}
       </div>
-      <SaveButton onSave={handleSave} />
+      <button onClick={handleSave} className="save-button">Apply Changes</button>
+      <button onClick={cancelSave} className="cancel-button">Cancel</button>
     </div>
   );
 };

@@ -1,0 +1,99 @@
+.settings-page {
+  background-color: #141a25;
+  padding: 20px;
+  border-radius: 16px;
+  border: 0;
+  flex: 1;
+  min-width: 250px;
+  box-sizing: border-box;
+  height: 100%;
+}
+  
+.settings-page h1 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  color: #333;
+}
+  
+.settings-page tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #2f3643;
+}
+  
+.settings-page .tabs button {
+  background: none;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.3s;
+  letter-spacing: .25px;
+}
+  
+.settings-page .tabs button.active {
+  border-bottom: 2px solid #007bff;
+  color: #007bff;
+}
+  
+.settings-page .content {
+  padding: 20px;
+  border-radius: 4px;
+  height: 80%;
+}
+  
+.general-section,
+.plugins-section,
+.system-section {
+  margin-bottom: 20px;
+}
+  
+.general-section h2,
+.plugins-section h2,
+.system-section h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+  
+button {
+  margin: 10px;
+}
+
+.save-button {
+  background-color: #007bff;
+  color: white;
+  border: 1px solid #007bff;
+  padding: 0px 16px;
+  line-height: 24px;
+  height: 36px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  letter-spacing: .25px;
+}
+  
+.save-button:hover {
+  background-color: #0056b3;
+}
+
+.cancel-button {
+  background-color: inherit;
+  color: white;
+  border: none;
+  height: 36px;
+  padding: 0px 16px;
+  font-size: 14px;
+  line-height: 24px;
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 1;
+  transition: opacity .15s ease-in-out, visibility .15s ease-in-out .15s;
+  letter-spacing: .25px;
+}
+  
+.cancel-button:hover {
+  background-color: #34383d;
+  color: #f9fafa;
+}

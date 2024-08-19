@@ -6,6 +6,7 @@ import DeviceSummary from './DeviceSummary';
 import Topology from './Topology';
 import LogViewer from './LogViewer';
 import NotFound from './NotFound';
+import Settings from './Settings';
 import '../styles/Dashboard.css';
 
 interface DashboardProps {
@@ -67,8 +68,8 @@ const Dashboard: React.FC<DashboardProps> = ({ menuTitle }) => {
         );
       case 'Settings':
         return (
-          <div className="row" style={{ height: 'auto' }}>
-            <h2>Settings Content</h2>
+          <div className="row" style={{ height: '90%' }}>
+            <Settings />
           </div>
         );
       default:
