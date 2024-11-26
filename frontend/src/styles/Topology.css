@@ -1,5 +1,31 @@
-.react-flow-container {
-    height: 70vh;
-    width: 70vw;
+.react-flow__node {
+  @apply transition-transform duration-200 ease-in-out;
 }
-  
+
+.react-flow__node:hover {
+  @apply transform scale-105;
+}
+
+.react-flow__handle {
+  @apply opacity-0 transition-opacity duration-200;
+}
+
+.react-flow__node:hover .react-flow__handle {
+  @apply opacity-100;
+}
+
+.react-flow__edge {
+  @apply transition-all duration-200;
+}
+
+.react-flow__edge:hover {
+  @apply stroke-2;
+}
+
+.react-flow__controls button {
+  @apply bg-white dark:bg-dark-700 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-dark-600 hover:bg-gray-50 dark:hover:bg-dark-600;
+}
+
+.react-flow__panel {
+  @apply bg-transparent;
+}

@@ -1,0 +1,39 @@
+# Use Node.js Alpine as base image
+FROM node:20-alpine
+
+# Set working directory for the entire application
+WORKDIR /opt/privasee
+
+# Install SQLite and build tools
+RUN apk add --no-cache sqlite sqlite-dev python3 make g++ git
+
+# Create necessary directories
+RUN mkdir -p api database/scripts database/sql database/backups
+
+# Copy database files first
+COPY ./backend/Database/sql ./database/sql
+COPY ./backend/Database/scripts ./database/scripts
+
+# Initialize database
+RUN cd ./database/scripts && \
+    chmod +x *.sh && \
+    ./init.sh
+
+# Copy API package files
+COPY ./backend/api/package*.json /opt/privasee/api/
+
+# Install API dependencies using Yarn
+WORKDIR /opt/privasee/api
+RUN yarn install
+
+# Copy API source code
+COPY ./backend/api/src /opt/privasee/api/src
+
+# Set back to main directory
+WORKDIR /opt/privasee
+
+# Expose API port
+EXPOSE 18000
+
+# Start API server
+CMD ["yarn", "--cwd", "api", "start"]

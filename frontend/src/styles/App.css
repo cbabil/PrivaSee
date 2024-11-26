@@ -1,29 +1,79 @@
+:root {
+  /* Dark theme variables */
+  --dark-bg: #1a1c23;
+  --dark-sidebar: #252832;
+  --dark-card: #2d323e;
+  --dark-text: #ffffff;
+  --dark-text-secondary: rgba(255, 255, 255, 0.7);
+  --dark-border: rgba(255, 255, 255, 0.1);
+  --dark-hover: rgba(255, 255, 255, 0.1);
+
+  /* Light theme variables */
+  --light-bg: #f8f9fa;
+  --light-sidebar: #ffffff;
+  --light-card: #ffffff;
+  --light-text: #2d323e;
+  --light-text-secondary: rgba(0, 0, 0, 0.7);
+  --light-border: rgba(0, 0, 0, 0.1);
+  --light-hover: rgba(0, 0, 0, 0.05);
+
+  /* Accent colors */
+  --primary: #3b82f6;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+}
+
 .app {
   display: flex;
-  flex-direction: row;
   min-height: 100vh;
-  position: relative;
-  }
-  
-  .dashboard {
-    flex-grow: 1;
-    padding: 20px;
-  }
-  
-  .dashboard-content, .dashboard-stats {
-    display: flex;
-    gap: 20px;
-  }
-  
-  .stat {
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-  }
-  
-  .chart {
-    margin-top: 20px;
-  }
-  
+}
+
+.app.dark-mode {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+}
+
+.app.light-mode {
+  background-color: var(--light-bg);
+  color: var(--light-text);
+}
+
+.dashboard {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.row {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.card {
+  background: var(--dark-card);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.light-mode .card {
+  background: var(--light-card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+}
+
+.stat {
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.chart {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 12px;
+}

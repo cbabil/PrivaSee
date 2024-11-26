@@ -1,35 +1,34 @@
-/* src/styles/Card.css */
 .card {
-  background-color: #141a25;
-  padding: 20px;
-  border-radius: 16px;
-  border: 0;
-  flex: 1;
-  min-width: 250px;
-  box-sizing: border-box;
+  background: var(--dark-card);
+  border-radius: 12px;
+  padding: 24px;
   height: 100%;
+  transition: all 0.3s ease;
+}
+
+.light-mode .card {
+  background: var(--light-card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .card h2 {
-  margin: 0 0 10px;
-  font-size: 20px;
-  color: #333;
+  margin: 0 0 16px;
+  font-size: 1.25rem;
+  font-weight: 600;
 }
 
-.card div {
-  margin: 0;
-  font-size: 16px;
-  color: #666;
+.dark-mode .card h2 {
+  color: var(--dark-text);
 }
 
-@media only screen and (max-width: 768px) {
-  .card {
-    width: calc(50% - 20px);
-  }
+.light-mode .card h2 {
+  color: var(--light-text);
 }
 
-@media only screen and (max-width: 480px) {
-  .card {
-    width: 100%;
-  }
+.card-content {
+  color: var(--dark-text-secondary);
+}
+
+.light-mode .card-content {
+  color: var(--light-text-secondary);
 }

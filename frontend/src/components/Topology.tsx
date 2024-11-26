@@ -1,78 +1,135 @@
-import React, { useCallback } from 'react';
-import ReactFlow, { Node, Edge, Controls, useNodesState, useEdgesState, addEdge, Position } from 'reactflow';
-import Card from './Card';
+import React, { useCallback, useState } from 'react';
+import ReactFlow, {
+  Node,
+  Edge,
+  Controls,
+  Background,
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  ConnectionMode,
+  Panel,
+  NodeProps,
+  Handle,
+  Position,
+} from 'reactflow';
+import { Wifi, Server, Monitor } from 'lucide-react';
 import 'reactflow/dist/style.css';
-import '../styles/Topology.css';
 
-const nodeDefaultsIn = {
-    sourcePosition: Position.Right,
-    type: 'input',
+const CustomNode: React.FC<NodeProps> = ({ data }) => {
+  const Icon = data.icon;
+  
+  return (
+    <div className="px-4 py-2 shadow-lg rounded-lg border border-gray-200 dark:border-dark-700 bg-white dark:bg-dark-800 min-w-[150px]">
+      <Handle type="target" position={Position.Left} className="w-3 h-3 bg-primary-500" />
+      <div className="flex items-center gap-2">
+        <Icon className="w-5 h-5 text-primary-500" />
+        <div className="text-sm font-medium text-gray-700 dark:text-gray-200">{data.label}</div>
+      </div>
+      <Handle type="source" position={Position.Right} className="w-3 h-3 bg-primary-500" />
+    </div>
+  );
 };
 
-const nodeDefaultsOut = {
-    targetPosition: Position.Left,
-    type: 'output',
+const nodeTypes = {
+  custom: CustomNode,
 };
 
-const nodeDefaultsInOut = {
-    sourcePosition: Position.Right,
-    targetPosition: Position.Left,
-}
-
+// Horizontal layout positions
 const initialNodes: Node[] = [
-  { id: 'router', position: { x: 0, y: 125 }, data: { label: 'Router' }, ...nodeDefaultsIn },
-  { id: 'switch', position: { x: 200, y: 125 }, data: { label: 'Switch' }, ...nodeDefaultsInOut },
-  { id: 'host-a', position: { x: 500, y: 25 }, data: { label: 'Host A' }, ...nodeDefaultsOut },
-  { id: 'host-b', position: { x: 500, y: 75 }, data: { label: 'Host B' }, ...nodeDefaultsOut },
-  { id: 'host-c', position: { x: 500, y: 125 }, data: { label: 'Host C' }, ...nodeDefaultsOut },
-  { id: 'host-d', position: { x: 500, y: 175 }, data: { label: 'Host D' }, ...nodeDefaultsOut },
-  { id: 'host-e', position: { x: 500, y: 225 }, data: { label: 'Host E' }, ...nodeDefaultsOut },
+  {
+    id: 'router',
+    type: 'custom',
+    position: { x: 100, y: 250 },
+    data: { label: 'Main Router', icon: Wifi },
+  },
+  {
+    id: 'switch1',
+    type: 'custom',
+    position: { x: 350, y: 150 },
+    data: { label: 'Switch 1', icon: Server },
+  },
+  {
+    id: 'switch2',
+    type: 'custom',
+    position: { x: 350, y: 350 },
+    data: { label: 'Switch 2', icon: Server },
+  },
+  {
+    id: 'pc1',
+    type: 'custom',
+    position: { x: 600, y: 50 },
+    data: { label: 'Desktop PC', icon: Monitor },
+  },
+  {
+    id: 'pc2',
+    type: 'custom',
+    position: { x: 600, y: 200 },
+    data: { label: 'Laptop', icon: Monitor },
+  },
+  {
+    id: 'pc3',
+    type: 'custom',
+    position: { x: 600, y: 350 },
+    data: { label: 'Smart TV', icon: Monitor },
+  },
+  {
+    id: 'pc4',
+    type: 'custom',
+    position: { x: 600, y: 500 },
+    data: { label: 'Mobile Phone', icon: Monitor },
+  },
 ];
 
 const initialEdges: Edge[] = [
-    { id: 'e1-2', source: 'router', target: 'switch' },
-    { id: 'e2-3', source: 'switch', target: 'host-a' },
-    { id: 'e2-4', source: 'switch', target: 'host-b' },
-    { id: 'e2-5', source: 'switch', target: 'host-c' },
-    { id: 'e2-6', source: 'switch', target: 'host-d' },
-    { id: 'e2-7', source: 'switch', target: 'host-e' },
+  { id: 'r-s1', source: 'router', target: 'switch1', animated: true, style: { stroke: '#6366f1' } },
+  { id: 'r-s2', source: 'router', target: 'switch2', animated: true, style: { stroke: '#6366f1' } },
+  { id: 's1-pc1', source: 'switch1', target: 'pc1', style: { stroke: '#6366f1' } },
+  { id: 's1-pc2', source: 'switch1', target: 'pc2', style: { stroke: '#6366f1' } },
+  { id: 's2-pc3', source: 'switch2', target: 'pc3', style: { stroke: '#6366f1' } },
+  { id: 's2-pc4', source: 'switch2', target: 'pc4', style: { stroke: '#6366f1' } },
 ];
 
-const renderFlow: React.FC = () => {
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes as Node[]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges as Edge[]);
-  
-    const onConnect = useCallback(
-      (params: Edge<any> | Connection) => setEdges((els) => addEdge(params, els)),
-      []
-    );
-  
-    return (
-      <div className="react-flow-container">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          fitView
-          attributionPosition="bottom-left"
-        >
-          <Controls />
-        </ReactFlow>
-      </div>
-    );
-  };
-
-
 const Topology: React.FC = () => {
-    return (
-        <Card 
-            content={renderFlow()}
-            height="100%" 
-            width="100%"
-        />
-    );
-}
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const onConnect = useCallback(
+    (params: any) => setEdges((eds) => addEdge({ ...params, animated: true, style: { stroke: '#6366f1' } }, eds)),
+    [setEdges]
+  );
+
+  return (
+    <div className="w-full h-[calc(100vh-theme(spacing.24))] bg-gray-50 dark:bg-dark-800 rounded-xl border border-gray-200 dark:border-dark-700 overflow-hidden">
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        nodeTypes={nodeTypes}
+        connectionMode={ConnectionMode.Loose}
+        onNodeDragStart={() => setIsDragging(true)}
+        onNodeDragStop={() => setIsDragging(false)}
+        fitView
+        minZoom={0.5}
+        maxZoom={2}
+        defaultEdgeOptions={{
+          type: 'smoothstep',
+          style: { strokeWidth: 2 },
+        }}
+      >
+        <Background color="#6366f1" size={1.5} />
+        <Controls className="bg-white dark:bg-dark-700 border border-gray-200 dark:border-dark-600 rounded-lg overflow-hidden" />
+        <Panel position="top-right" className="p-2 bg-white dark:bg-dark-700 rounded-lg shadow-sm border border-gray-200 dark:border-dark-600">
+          <div className="text-sm text-gray-600 dark:text-gray-300">
+            {isDragging ? 'Release to drop' : 'Drag nodes to reposition'}
+          </div>
+        </Panel>
+      </ReactFlow>
+    </div>
+  );
+};
 
 export default Topology;

@@ -1,18 +1,26 @@
 import React from 'react';
-import '../styles/Card.css';
+import { cn } from '../utils/cn';
 
 interface CardProps {
   title?: string;
-  content: string;
-  height?: string;
-  width?: string;
+  content: React.ReactNode;
+  className?: string;
 }
 
-const Card: React.FC<CardProps> = ({ title, content, height="300px", width }) => {
+const Card: React.FC<CardProps> = ({ title, content, className }) => {
   return (
-    <div className="card" style={{ height,...(width && { width }) }}>
-      {title && <h2>{title}</h2>}
-      <div>{content}</div>
+    <div className={cn(
+      'bg-white dark:bg-dark-800 rounded-xl border border-gray-200 dark:border-dark-700 overflow-hidden',
+      className
+    )}>
+      {title && (
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-dark-700">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+            {title}
+          </h2>
+        </div>
+      )}
+      <div className="p-6">{content}</div>
     </div>
   );
 };

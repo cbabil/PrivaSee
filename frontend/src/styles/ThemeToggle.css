@@ -1,0 +1,11 @@
+.theme-toggle {
+  margin-right: 16px !important;
+}
+
+.theme-icon {
+  color: #fff;
+}
+
+.light-mode .theme-icon {
+  color: #141a25;
+}

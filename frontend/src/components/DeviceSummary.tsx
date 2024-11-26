@@ -1,195 +1,354 @@
-import React, { useEffect, useState } from 'react';
-import { ClipLoader } from 'react-spinners';
+import React, { useState, useEffect } from 'react';
+import { Info, Activity, Settings, X, ArrowUpDown, Loader2 } from 'lucide-react';
+import { cn } from '../utils/cn';
+import { Device } from '../types/devices';
+import { fetchDevices } from '../api/devices';
 import Card from './Card';
-import '../styles/DeviceSummary.css';
-import SettingsIcon from '@mui/icons-material/Settings';
-import InfoIcon from '@mui/icons-material/Info';
-import InsightsIcon from '@mui/icons-material/Insights';
-
-interface Device {
-  name: string;
-  ipAddress: string;
-  macAddress: string;
-  vendor: string;
-  uptime: string;
-  status: string;
-}
+import SearchInput from './SearchInput';
+import toast from 'react-hot-toast';
 
 interface SortConfig {
   key: keyof Device;
-  direction: 'ascending' | 'descending';
+  direction: 'asc' | 'desc';
 }
 
 const DeviceSummary: React.FC = () => {
+  const [loading, setLoading] = useState(true);
   const [devices, setDevices] = useState<Device[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
   const [selectedDevice, setSelectedDevice] = useState<Device | null>(null);
-  const [activeTab, setActiveTab] = useState<string>('overview');
-  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'name', direction: 'ascending' });
+  const [activeTab, setActiveTab] = useState('overview');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'online' | 'offline'>('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'name', direction: 'asc' });
+  const itemsPerPage = 25;
 
   useEffect(() => {
-    const fetchDevices = async () => {
-      const sampleDevices: Device[] = [
-        { name: 'Device 1', vendor: 'Vendor 1', status: 'Online', ipAddress: '192.168.1.1', macAddress: '00:11:22:33:44:55', uptime: '5d 8h 6m 37s' },
-        { name: 'Device 2', vendor: 'Vendor 2', status: 'Online', ipAddress: '192.168.1.2', macAddress: '00:11:22:33:44:e5', uptime: '2d 4h 1m 37s' },
-        { name: 'Device 3', vendor: 'Vendor 1', status: 'Offline', ipAddress: '192.168.1.3', macAddress: '00:11:22:23:44:e5', uptime: '1d 1h 16m 34s' },
-      ];
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      setDevices(sampleDevices);
-      setLoading(false);
+    const loadDevices = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchDevices();
+        setDevices(data);
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : 'Failed to load devices');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchDevices();
+    loadDevices();
   }, []);
 
-  const getStatusClass = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'online':
-        return 'status-online';
-      case 'offline':
-        return 'status-offline';
-      default:
-        return 'status-unknown';
-    }
+  const handleSort = (key: keyof Device) => {
+    setSortConfig(current => ({
+      key,
+      direction: current.key === key && current.direction === 'asc' ? 'desc' : 'asc'
+    }));
   };
 
   const handleDeviceClick = (device: Device) => {
-    setSelectedDevice(device);
+    setSelectedDevice(selectedDevice?.id === device.id ? null : device);
   };
 
-  const handleCloseCard = () => {
-    setSelectedDevice(null);
+  const handleStatusClick = (device: Device, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setSelectedDevice(selectedDevice?.id === device.id ? null : device);
   };
 
-  const handleSort = (key: keyof Device) => {
-    let direction: 'ascending' | 'descending' = 'ascending';
-    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-      direction = 'descending';
-    }
-    setSortConfig({ key, direction });
-
-    const sortedDevices = [...devices].sort((a, b) => {
-      if (a[key] < b[key]) {
-        return direction === 'ascending' ? -1 : 1;
-      }
-      if (a[key] > b[key]) {
-        return direction === 'ascending' ? 1 : -1;
-      }
-      return 0;
+  const filteredDevices = devices
+    .filter(device => {
+      const matchesSearch = Object.values(device).some(value =>
+        value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      const matchesStatus = statusFilter === 'all' || device.status.toLowerCase() === statusFilter;
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      const aValue = a[sortConfig.key];
+      const bValue = b[sortConfig.key];
+      const direction = sortConfig.direction === 'asc' ? 1 : -1;
+      return aValue < bValue ? -direction : direction;
     });
-    setDevices(sortedDevices);
-  };
 
-  const renderTable = () => (
-    <div className="device-summary">
-      <table>
-        <thead>
-          <tr>
-            <th onClick={() => handleSort('name')}>
-              Name {sortConfig.key === 'name' ? (sortConfig.direction === 'ascending' ? '↑' : '↓') : '↑↓'}
-            </th>
-            <th onClick={() => handleSort('vendor')}>
-              Vendor {sortConfig.key === 'vendor' ? (sortConfig.direction === 'ascending' ? '↑' : '↓') : '↑↓'}
-            </th>
-            <th onClick={() => handleSort('ipAddress')}>
-              IP Address {sortConfig.key === 'ipAddress' ? (sortConfig.direction === 'ascending' ? '↑' : '↓') : '↑↓'}
-            </th>
-            <th onClick={() => handleSort('macAddress')}>
-              MAC Address {sortConfig.key === 'macAddress' ? (sortConfig.direction === 'ascending' ? '↑' : '↓') : '↑↓'}
-            </th>
-            <th onClick={() => handleSort('uptime')}>
-              Uptime {sortConfig.key === 'uptime' ? (sortConfig.direction === 'ascending' ? '↑' : '↓') : '↑↓'}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {devices.map((device) => (
-            <tr key={device.macAddress} onClick={() => handleDeviceClick(device)}>
-              <td>
-                <span className={`status-ball ${getStatusClass(device.status)}`}>
-                  <span className="tooltip">{device.status}</span>
-                </span>
-                <span className="clickable">{device.name}</span>
-              </td>
-              <td><span className="clickable">{device.vendor}</span></td>
-              <td><span className="clickable">{device.ipAddress}</span></td>
-              <td><span className="clickable">{device.macAddress}</span></td>
-              <td><span className="clickable">{device.uptime}</span></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+  const totalPages = Math.ceil(filteredDevices.length / itemsPerPage);
+  const currentDevices = filteredDevices.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'overview':
-        return (
-          <div>
-            <p><strong>Vendor:</strong> {selectedDevice?.vendor}</p>
-            <p><strong>Status:</strong> {selectedDevice?.status}</p>
-            <p><strong>IP Address:</strong> {selectedDevice?.ipAddress}</p>
-            <p><strong>MAC Address:</strong> {selectedDevice?.macAddress}</p>
-            <p><strong>Uptime:</strong> {selectedDevice?.uptime}</p>
-          </div>
-        );
-      case 'insights':
-        return <div>Insights content goes here.</div>;
-      case 'settings':
-        return <div>Settings content goes here.</div>;
-      default:
-        return null;
-    }
-  };
+  if (loading) {
+    return (
+      <Card content={
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="w-8 h-8 text-primary-500 animate-spin" />
+        </div>
+      } />
+    );
+  }
 
   return (
-    <>
-      {loading ? (
-        <div className="loading-container">
-          <ClipLoader size={80} color={"#123abc"} loading={loading} />
-          <p>Loading...</p>
-        </div>
-      ) : (
-        <div className="device-summary-container">
-          <Card content={renderTable()} height="100%" />
-          <div className={`device-details-card ${selectedDevice ? 'open' : ''}`}>
-            {selectedDevice && (
-              <div className="device-details-content">
-                <button className="close-button" onClick={handleCloseCard}>×</button>
-                <h2>{selectedDevice.name}</h2>
-                <div className="tabs">
-                  <div
-                    className={`tab ${activeTab === 'overview' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('overview')}
-                  >
-                    <InfoIcon />
-                    <span>Overview</span>
-                  </div>
-                  <div
-                    className={`tab ${activeTab === 'insights' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('insights')}
-                  >
-                    <InsightsIcon />
-                    <span>Insights</span>
-                  </div>
-                  <div
-                    className={`tab ${activeTab === 'settings' ? 'active' : ''}`}
-                    onClick={() => setActiveTab('settings')}
-                  >
-                    <SettingsIcon />
-                    <span>Settings</span>
-                  </div>
+    <div className="relative">
+      <Card
+        content={
+          <div className="space-y-4">
+            <div className="flex items-center justify-between gap-4">
+              <SearchInput
+                value={searchTerm}
+                onChange={setSearchTerm}
+                placeholder="Search devices..."
+                className="flex-1"
+              />
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setStatusFilter('all')}
+                  className={cn(
+                    'px-3 py-1 rounded-md text-sm font-medium',
+                    statusFilter === 'all'
+                      ? 'bg-primary-500 text-white'
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-700'
+                  )}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setStatusFilter('online')}
+                  className={cn(
+                    'px-3 py-1 rounded-md text-sm font-medium',
+                    statusFilter === 'online'
+                      ? 'bg-primary-500 text-white'
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-700'
+                  )}
+                >
+                  Online
+                </button>
+                <button
+                  onClick={() => setStatusFilter('offline')}
+                  className={cn(
+                    'px-3 py-1 rounded-md text-sm font-medium',
+                    statusFilter === 'offline'
+                      ? 'bg-primary-500 text-white'
+                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-dark-700'
+                  )}
+                >
+                  Offline
+                </button>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead className="bg-gray-50 dark:bg-gray-800">
+                  <tr>
+                    <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <div className="flex items-center gap-1 cursor-pointer" onClick={() => handleSort('name')}>
+                        Name
+                        <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <div className="flex items-center gap-1 cursor-pointer" onClick={() => handleSort('vendor')}>
+                        Vendor
+                        <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <div className="flex items-center gap-1 cursor-pointer" onClick={() => handleSort('ipAddress')}>
+                        IP Address
+                        <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <div className="flex items-center gap-1 cursor-pointer" onClick={() => handleSort('macAddress')}>
+                        MAC Address
+                        <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                    <th scope="col" className="px-3 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                      <div className="flex items-center gap-1 cursor-pointer" onClick={() => handleSort('uptime')}>
+                        Uptime
+                        <ArrowUpDown className="h-4 w-4" />
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-dark-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  {currentDevices.map((device) => (
+                    <tr
+                      key={device.id}
+                      onClick={() => handleDeviceClick(device)}
+                      className="hover:bg-gray-50 dark:hover:bg-dark-700/50 cursor-pointer"
+                    >
+                      <td className="px-3 py-4 whitespace-nowrap text-sm">
+                        <div className="flex items-center">
+                          <div
+                            onClick={(e) => handleStatusClick(device, e)}
+                            className={cn(
+                              'h-2.5 w-2.5 rounded-full mr-2',
+                              device.status === 'Online' ? 'bg-green-500' : 'bg-red-500'
+                            )}
+                          />
+                          {device.name}
+                        </div>
+                      </td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                        {device.vendor}
+                      </td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                        {device.ipAddress}
+                      </td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                        {device.macAddress}
+                      </td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
+                        {device.uptime}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between border-t border-gray-200 dark:border-dark-700 px-4 py-3">
+                <div className="flex items-center">
+                  <p className="text-sm text-gray-700 dark:text-gray-300">
+                    Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to{' '}
+                    <span className="font-medium">
+                      {Math.min(currentPage * itemsPerPage, filteredDevices.length)}
+                    </span>{' '}
+                    of <span className="font-medium">{filteredDevices.length}</span> results
+                  </p>
                 </div>
-                <div className="tab-content">
-                  {renderTabContent()}
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-dark-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Previous
+                  </button>
+                  <button
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-dark-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
             )}
           </div>
-        </div>
-      )}
-    </>
+        }
+      />
+
+      <div
+        className={cn(
+          'fixed inset-y-0 right-0 w-96 bg-white dark:bg-dark-800 border-l border-gray-200 dark:border-dark-700 transform transition-transform duration-300 ease-in-out',
+          selectedDevice ? 'translate-x-0' : 'translate-x-full'
+        )}
+      >
+        {selectedDevice && (
+          <div className="h-full flex flex-col">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-dark-700">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Device Details
+              </h2>
+              <button
+                onClick={() => setSelectedDevice(null)}
+                className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="flex space-x-4 p-6 border-b border-gray-200 dark:border-dark-700">
+              <button
+                onClick={() => setActiveTab('overview')}
+                className={cn(
+                  'flex items-center space-x-2 text-sm font-medium',
+                  activeTab === 'overview'
+                    ? 'text-primary-500'
+                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                )}
+              >
+                <Info className="h-4 w-4" />
+                <span>Overview</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('insights')}
+                className={cn(
+                  'flex items-center space-x-2 text-sm font-medium',
+                  activeTab === 'insights'
+                    ? 'text-primary-500'
+                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                )}
+              >
+                <Activity className="h-4 w-4" />
+                <span>Insights</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('settings')}
+                className={cn(
+                  'flex items-center space-x-2 text-sm font-medium',
+                  activeTab === 'settings'
+                    ? 'text-primary-500'
+                    : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                )}
+              >
+                <Settings className="h-4 w-4" />
+                <span>Settings</span>
+              </button>
+            </div>
+
+            <div className="p-6 overflow-y-auto">
+              {activeTab === 'overview' && (
+                <div className="space-y-4">
+                  <div>
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Name: </span>
+                    <span className="text-sm text-gray-900 dark:text-white">{selectedDevice.name}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Status: </span>
+                    <span className={cn(
+                      'text-sm font-medium',
+                      selectedDevice.status === 'Online' ? 'text-green-500' : 'text-red-500'
+                    )}>
+                      {selectedDevice.status}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Vendor: </span>
+                    <span className="text-sm text-gray-900 dark:text-white">{selectedDevice.vendor}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">IP Address: </span>
+                    <span className="text-sm text-gray-900 dark:text-white">{selectedDevice.ipAddress}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">MAC Address: </span>
+                    <span className="text-sm text-gray-900 dark:text-white">{selectedDevice.macAddress}</span>
+                  </div>
+                  <div>
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Uptime: </span>
+                    <span className="text-sm text-gray-900 dark:text-white">{selectedDevice.uptime}</span>
+                  </div>
+                </div>
+              )}
+              {activeTab === 'insights' && (
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Device insights content
+                </div>
+              )}
+              {activeTab === 'settings' && (
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Device settings content
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

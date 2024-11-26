@@ -11,10 +11,6 @@ services:
       dockerfile: docker/frontend-Dockerfile
     ports:
       - "15000:15000"
-    #environment:
-      #API_URL: "http://10.0.5.19:8000/api"
-    #depends_on:
-    #  - backend
     networks:
       privasee-net:
 
@@ -24,9 +20,9 @@ services:
       context: ./
       dockerfile: docker/backend-Dockerfile
     ports:
-      - "8000:8000"
+      - "18000:18000"
     environment:
-      DATABASE_URL: "/opt/speedtest/database/pispeedtest.db"
-      MIDDLEWEAR_PORT: "8000"
+      DATABASE_URL: "/opt/speedtest/database/privasee.db"
+      MIDDLEWEAR_PORT: "18000"
     networks:
       privasee-net:
