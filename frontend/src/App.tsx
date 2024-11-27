@@ -18,9 +18,9 @@ const AppContent: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark-900">
       <Sidebar setMenuTitle={setMenuTitle} />
-      <main className="ml-48">
+      <div className="pl-48">
         <Dashboard menuTitle={menuTitle} />
-      </main>
+      </div>
       <Toaster
         position="top-right"
         toastOptions={{
