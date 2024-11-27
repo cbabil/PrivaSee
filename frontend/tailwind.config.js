@@ -28,7 +28,7 @@ export default {
           400: '#9ca3af',
           500: '#6b7280',
           600: '#4b5563',
-          700: '#1f2937', // Sidebar background
+          700: '#141a25', // Sidebar background
           800: '#141a25', // Card background
           900: '#0f1219', // Main background
         },
